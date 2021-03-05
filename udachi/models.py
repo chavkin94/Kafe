@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 # Create your models here.
@@ -14,17 +15,6 @@ class TipBluda(models.Model):
         return self.nazvanie
 
 
-class Tara(models.Model):
-    class Meta:
-        verbose_name = 'Тара'
-        verbose_name_plural = 'Тары'
-
-    nazvanie = models.CharField(verbose_name='Название', max_length=255, null=False, blank=False)
-    cena = models.FloatField('Цена', default=0 )
-
-    def __str__(self):
-        return self.nazvanie
-
 
 class Bluda(models.Model):
     class Meta:
@@ -37,7 +27,7 @@ class Bluda(models.Model):
     gramovka = models.FloatField('Граммовка', default=0 )
     prevyu = models.ImageField('Превью', null=False, blank=False )
     tip_bluda =  models.ForeignKey(TipBluda, verbose_name='Тип блюда' , on_delete=models.SET_NULL, null=True)
-    tara_po_umolchaniu = models.ForeignKey(Tara, verbose_name='Тара по умолчанию' , on_delete=models.SET_NULL, null=True)
+
 
 
     def __str__(self):
@@ -107,3 +97,58 @@ class DetaliZakaza(models.Model):
     zakaz = models.ForeignKey(Zakaz, verbose_name='Заказ', on_delete=models.CASCADE)
     bludo = models.ForeignKey(Bluda, verbose_name='Блюдо', null=True, blank=True, on_delete=models.SET_NULL)
     stoimost_na_moment_realizazii = models.FloatField('Цена на момент реализации', null=True, blank=True)
+
+
+
+class Bronirovanie(models.Model):
+    class Meta:
+        verbose_name = 'Бронирование'
+        verbose_name_plural = 'Бронирования'
+
+    vremia = models.TimeField('Время', null=True, blank=True)
+    data = models.DateField('Дата', null=True, blank=True)
+    telephone = models.CharField('Tелефон', null=True, blank=True )
+    fio = models.CharField('ФИО', null=True, blank=True)
+    status_bronirovania = models.BooleanField('Бронь  подтверждена', default=False)
+    predoplata = models.BooleanField('Предоплата', default=False)
+    stolik = models.IntegerField('Номер столика',  null=True, blank=True,)
+
+
+
+class Sklad(models.Model):
+    class Meta:
+        verbose_name = 'Склад'
+        verbose_name_plural = 'Склады'
+    nazvanie = models.CharField('Название склада', max_length=255)
+
+
+class IngridientiNaSklade(models.Model):
+    class Meta:
+        verbose_name = 'Ингридиент на складе'
+        verbose_name_plural = 'Ингридиенты на складе'
+
+    ingridient = models.ForeignKey(Ingridienti, verbose_name='Ингридиент', on_delete=models.CASCADE)
+    sklad = models.ForeignKey(Sklad, verbose_name='Склад', on_delete=models.CASCADE)
+    kolvo = models.FloatField('Кол-во', default=0)
+
+
+class IstoriaizmeneniaNaSkladax(models.Model):
+    class Meta:
+        verbose_name = 'История измененения на складе'
+        verbose_name_plural = 'Истории измененения на складе'
+
+    tip_operazii = models.IntegerField('Тип операции', default=1, choices=(
+        (1, 'Поступление'),
+        (2, 'Спиисание'),
+        (3, 'Реализация'),
+        (4, 'Перемещение'),
+    ))
+
+    data_i_vremia = models.DateTimeField('Дата и время операции', auto_now_add=True)
+    ispolnitel = models.ForeignKey(User, verbose_name='Исполнитель', on_delete=models.SET_NULL, null=True, blank=True)
+    ingridient = models.ForeignKey(Ingridienti, verbose_name='Ингридиент', on_delete=models.SET_NULL, null=True, blank=True)
+    kolvo = models.FloatField('Кол-во', default=0)
+    cena_na_moment_zakupki = models.FloatField('Цена на момент закупки', null=True, blank=True)
+    sklad_otkuda = models.ForeignKey(Sklad, verbose_name='Склад откуда', on_delete=models.SET_NULL, null=True, blank=True)
+    sklad_kuda = models.ForeignKey(Sklad, verbose_name='Склад куда', on_delete=models.SET_NULL, null=True,
+                                     blank=True)
