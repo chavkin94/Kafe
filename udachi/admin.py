@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from udachi.models import TipBluda, Bluda, Ingridienti, IngridientiVBlude
+from udachi.models import TipBluda, Bluda, Ingridienti, IngridientiVBlude, Akzia, Zakaz
 
 
 class TipBludaAdmin(admin.ModelAdmin):
@@ -40,3 +40,43 @@ class BludaAdmin(admin.ModelAdmin):
     ordering = ['-nazvanie',]
 
 admin.site.register(Bluda, BludaAdmin)
+
+
+
+class AkziaAdmin(admin.ModelAdmin):
+
+    list_display = [
+        'id',
+        'nazvanie',
+    ]
+    # list_filter = ('nazvanie',)
+    list_display_links = ['id', ]
+    search_fields = ['nazvanie',]
+    list_editable = [ 'nazvanie', ]
+    ordering = ['-nazvanie',]
+
+admin.site.register(Akzia, AkziaAdmin)
+
+
+class ZakazAdmin(admin.ModelAdmin):
+
+    list_display = [
+        'id',
+        'sposob_otdachi',
+        'telephone',
+        'fio',
+        'akzia',
+        'data_i_vremia_zakaza',
+        'adres',
+        'stolik',
+        'zakaz_proveden'
+    ]
+
+    list_filter = ('sposob_otdachi', 'akzia', 'stolik', 'zakaz_proveden')
+    list_display_links = ['id', ]
+    search_fields = ['telephone', 'data_i_vremia_zakaza', 'fio', 'adres', 'stolik']
+    # list_editable = [ 'nazvanie', ]
+
+    ordering = ['data_i_vremia_zakaza',]
+
+admin.site.register(Zakaz, ZakazAdmin)
