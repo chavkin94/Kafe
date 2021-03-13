@@ -15,7 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
+
+from udachi.views import render_page_home, render_page_bluda_lv
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-]
+    path('', render_page_home, name='home'),
+    path('bluda/', render_page_bluda_lv, name='bluda_lv'),
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -26,6 +26,8 @@ class Bluda(models.Model):
     gramovka = models.FloatField('Граммовка', default=0)
     prevyu = models.ImageField('Превью', null=False, blank=False)
     tip_bluda = models.ForeignKey(TipBluda, verbose_name='Тип блюда', on_delete=models.SET_NULL, null=True)
+    ne_pokazivat = models.BooleanField('Не показывать блюдо', default=False)
+    kolvo_dobavlenia_v_korzinu = models.IntegerField('Кол-во раз добавили в корзину', default=0)
 
     def __str__(self):
         return self.nazvanie
@@ -187,3 +189,4 @@ class Sotrudnic(models.Model):
     user = models.OneToOneField(User, verbose_name='Логин', on_delete=models.CASCADE)
     telephone = models.CharField('Tелефон', null=True, blank=True, max_length=255)
     data_rozdenia = models.DateField('Дата рождения', null=True, blank=True)
+

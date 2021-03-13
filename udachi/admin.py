@@ -32,11 +32,14 @@ class BludaAdmin(admin.ModelAdmin):
         'cena',
         'gramovka',
         'tip_bluda',
+        'ne_pokazivat',
+        'kolvo_dobavlenia_v_korzinu'
     ]
-    list_filter = ('tip_bluda',)
+    list_filter = ('tip_bluda', 'ne_pokazivat')
+    readonly_fields = ['kolvo_dobavlenia_v_korzinu',]
     list_display_links = ['nazvanie',]
     search_fields = ['nazvanie', 'cena','tip_bluda__nazvanie']
-    list_editable = [ 'opisanie', 'cena', 'gramovka', 'tip_bluda']
+    list_editable = [ 'opisanie', 'cena', 'gramovka', 'tip_bluda', 'ne_pokazivat']
     ordering = ['-nazvanie',]
 
 admin.site.register(Bluda, BludaAdmin)
